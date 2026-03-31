@@ -139,11 +139,38 @@ document.addEventListener('DOMContentLoaded', function() {
     var filteredRows = allRows.slice();
     var perPage = 10;
     var currentPage = 1;
+    var sortCol = -1;
+    var sortDir = 'asc';
 
     var showSelect = document.getElementById('tcPerPage');
     var searchInput = document.getElementById('tcSearch');
     var infoEl = document.getElementById('tcInfo');
     var pagEl = document.getElementById('tcPagination');
+
+    function getCellValue(row, col) {
+        var cell = row.querySelectorAll('td')[col];
+        if (!cell) return '';
+        return cell.textContent.trim();
+    }
+
+    function compareValues(a, b) {
+        var numA = parseFloat(a.replace(/[^0-9.\-]/g, ''));
+        var numB = parseFloat(b.replace(/[^0-9.\-]/g, ''));
+        if (!isNaN(numA) && !isNaN(numB)) {
+            return numA - numB;
+        }
+        return a.localeCompare(b, 'es');
+    }
+
+    function sortRows() {
+        if (sortCol < 0) return;
+        filteredRows.sort(function(a, b) {
+            var valA = getCellValue(a, sortCol);
+            var valB = getCellValue(b, sortCol);
+            var result = compareValues(valA, valB);
+            return sortDir === 'asc' ? result : -result;
+        });
+    }
 
     function filterRows() {
         var q = (searchInput ? searchInput.value : '').toLowerCase().trim();
@@ -154,6 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return row.textContent.toLowerCase().indexOf(q) !== -1;
             });
         }
+        sortRows();
         currentPage = 1;
         render();
     }
@@ -166,9 +194,11 @@ document.addEventListener('DOMContentLoaded', function() {
         var start = (currentPage - 1) * perPage;
         var end = Math.min(start + perPage, total);
 
+        // Re-append rows in sorted order so DOM order matches
         allRows.forEach(function(r) { r.style.display = 'none'; });
-        for (var i = start; i < end; i++) {
-            filteredRows[i].style.display = '';
+        for (var i = 0; i < filteredRows.length; i++) {
+            tbody.appendChild(filteredRows[i]);
+            filteredRows[i].style.display = (i >= start && i < end) ? '' : 'none';
         }
 
         if (infoEl) {
@@ -218,6 +248,29 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Sortable headers
+    var headers = table.querySelectorAll('th.sortable');
+    headers.forEach(function(th) {
+        th.addEventListener('click', function() {
+            var col = parseInt(th.dataset.col);
+            headers.forEach(function(h) {
+                if (h !== th) h.classList.remove('asc', 'desc');
+            });
+
+            if (sortCol === col) {
+                sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortCol = col;
+                sortDir = 'asc';
+            }
+
+            th.classList.remove('asc', 'desc');
+            th.classList.add(sortDir);
+
+            filterRows();
+        });
+    });
 
     render();
 });

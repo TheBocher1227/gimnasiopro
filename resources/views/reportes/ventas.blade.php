@@ -70,11 +70,11 @@
             <table class="data-table" id="dataTable">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Cliente</th>
-                        <th>Fecha</th>
-                        <th>Forma Pago</th>
-                        <th class="text-right">Total</th>
+                        <th class="sortable" data-col="0">ID</th>
+                        <th class="sortable" data-col="1">Cliente</th>
+                        <th class="sortable" data-col="2">Fecha</th>
+                        <th class="sortable" data-col="3">Forma Pago</th>
+                        <th class="sortable text-right" data-col="4">Total</th>
                     </tr>
                 </thead>
                 <tbody>

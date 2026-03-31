@@ -55,12 +55,12 @@
             <table class="data-table" id="dataTable">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Correo</th>
-                        <th>Teléfono</th>
-                        <th>Membresía</th>
-                        <th>Estado</th>
+                        <th class="sortable" data-col="0">ID</th>
+                        <th class="sortable" data-col="1">Nombre</th>
+                        <th class="sortable" data-col="2">Correo</th>
+                        <th class="sortable" data-col="3">Teléfono</th>
+                        <th class="sortable" data-col="4">Membresía</th>
+                        <th class="sortable" data-col="5">Estado</th>
                     </tr>
                 </thead>
                 <tbody>

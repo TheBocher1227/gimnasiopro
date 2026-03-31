@@ -207,4 +207,32 @@
             min-width: 600px;
         }
     }
+
+    /* Sortable headers */
+    .data-table th.sortable {
+        cursor: pointer;
+        user-select: none;
+        position: relative;
+        padding-right: 24px;
+    }
+
+    .data-table th.sortable::after {
+        content: '⇅';
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.65rem;
+        color: #c0c4cc;
+    }
+
+    .data-table th.sortable.asc::after {
+        content: '▲';
+        color: #4f46e5;
+    }
+
+    .data-table th.sortable.desc::after {
+        content: '▼';
+        color: #4f46e5;
+    }
 </style>

@@ -86,4 +86,60 @@ class ReporteController extends Controller
 
         return view('reportes.productos', compact('productos'));
     }
+
+    /**
+     * Corte de Caja.
+     */
+    public function corteCaja(Request $request)
+    {
+        $fecha = $request->get('fecha', Carbon::today()->toDateString());
+        $formaPago = $request->get('forma_pago', 'todos');
+
+        // Membresías (pagos)
+        $pagosQuery = Pago::with('cliente')
+            ->whereDate('fecha_pago', $fecha);
+
+        if ($formaPago !== 'todos') {
+            $pagosQuery->where('forma_pago', $formaPago);
+        }
+
+        $pagos = $pagosQuery->orderBy('id_pago', 'desc')->get();
+
+        // Ventas de productos
+        $ventasQuery = Venta::with('cliente')
+            ->whereDate('fecha_venta', $fecha);
+
+        if ($formaPago !== 'todos') {
+            $ventasQuery->where('forma_pago', $formaPago);
+        }
+
+        $ventas = $ventasQuery->orderBy('id_venta', 'desc')->get();
+
+        // Totales
+        $totalMembresias = $pagos->sum('monto');
+        $totalVentasProductos = $ventas->sum('total');
+        $totalBruto = $totalMembresias + $totalVentasProductos;
+
+        // Totales por método de pago (siempre del día completo para la card de métodos)
+        $pagosDelDia = Pago::whereDate('fecha_pago', $fecha)->get();
+        $ventasDelDia = Venta::whereDate('fecha_venta', $fecha)->get();
+
+        $totalEfectivo = $pagosDelDia->where('forma_pago', 'efectivo')->sum('monto')
+                       + $ventasDelDia->where('forma_pago', 'efectivo')->sum('total');
+
+        $totalTarjeta = $pagosDelDia->where('forma_pago', 'tarjeta')->sum('monto')
+                      + $ventasDelDia->where('forma_pago', 'tarjeta')->sum('total');
+
+        return view('reportes.corte-caja', compact(
+            'fecha',
+            'formaPago',
+            'pagos',
+            'ventas',
+            'totalMembresias',
+            'totalVentasProductos',
+            'totalBruto',
+            'totalEfectivo',
+            'totalTarjeta'
+        ));
+    }
 }

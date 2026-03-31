@@ -52,13 +52,13 @@
             <table class="data-table" id="dataTable">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Producto</th>
-                        <th>Tipo</th>
-                        <th>Cantidad</th>
-                        <th>Motivo</th>
-                        <th>Fecha</th>
-                        <th class="text-right">Stock</th>
+                        <th class="sortable" data-col="0">ID</th>
+                        <th class="sortable" data-col="1">Producto</th>
+                        <th class="sortable" data-col="2">Tipo</th>
+                        <th class="sortable" data-col="3">Cantidad</th>
+                        <th class="sortable" data-col="4">Motivo</th>
+                        <th class="sortable" data-col="5">Fecha</th>
+                        <th class="sortable text-right" data-col="6">Stock</th>
                     </tr>
                 </thead>
                 <tbody>

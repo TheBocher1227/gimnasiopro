@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/reportes/inventario', [ReporteController::class, 'inventario'])->name('reportes.inventario');
     Route::get('/reportes/clientes', [ReporteController::class, 'clientes'])->name('reportes.clientes');
     Route::get('/reportes/productos', [ReporteController::class, 'productos'])->name('reportes.productos');
+    Route::get('/reportes/corte-caja', [ReporteController::class, 'corteCaja'])->name('reportes.corte-caja');
 
     // Exportaciones
     Route::get('/exportar/ventas/pdf', [ExportController::class, 'ventasPdf'])->name('exportar.ventas.pdf');
